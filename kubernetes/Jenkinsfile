@@ -17,7 +17,8 @@ containerTemplate(name: 'kubectl', image: 'roffe/kubectl', command: 'cat', ttyEn
 	// 예외처리 구문
 	try {
 		// Slack - 빌드 시작시
-
+		// notifySlack("STARTED", "#0000FF")
+		
 		// #1 Github 소스 가져오기
 		stage('Get Source') {
 			git credentialsId: 'github-lab08', url: 'https://github.com/jina-v/cicd-front', branch: 'master'
@@ -76,7 +77,8 @@ containerTemplate(name: 'kubectl', image: 'roffe/kubectl', command: 'cat', ttyEn
 			container('kubectl') {
 				sh "kubectl apply -n ${namespace} -f ${deployment}"
 				sh "kubectl apply -n ${namespace} -f ${service}"
-				sh "kubectl get svc -n lab08"
+				sh "kubectl set image deployment ${appname} ${containername}=${image}:${tag} -n ${namespace}"
+				sh "kubectl get svc -n ${namespace}"
 			}
 		}
 
