@@ -63,7 +63,7 @@ containerTemplate(name: 'kubectl', image: 'roffe/kubectl', command: 'cat', ttyEn
 		stage('Dockerizing') {
 			container('docker') {
 				docker.withRegistry("${dockerRegistry}", "${credentialRegistry}") {
-					sh "docker build -f ./Dockerfile -t ${image}:${tag} ${WORKSPACE}" 
+					sh "docker build -f ./Dockerfile -t ${image}:${tag} ${WORKSPACE}"
 					sh "docker push ${image}:${tag}"
 					sh "docker tag ${image}:${tag} ${image}:latest"
 					sh "docker push ${image}:latest"
@@ -75,8 +75,8 @@ containerTemplate(name: 'kubectl', image: 'roffe/kubectl', command: 'cat', ttyEn
 		stage('Deploy') {
 			container('kubectl') {
 				sh "kubectl apply -n ${namespace} -f ${deployment}"
-				sh "kubectlapply -n ${namespace} -f ${service}"
-				sh "kubectl get svc -n devops"
+				sh "kubectl apply -n ${namespace} -f ${service}"
+				sh "kubectl get svc -n lab08"
 			}
 		}
 
